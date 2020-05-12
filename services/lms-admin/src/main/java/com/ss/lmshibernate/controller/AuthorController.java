@@ -23,7 +23,7 @@ import com.ss.lmshibernate.repository.AuthorRepository;
 
 @RestController
 @RequestMapping(value = "/lms/admin*")
-public class AuthorController<X> {
+public class AuthorController{
 	@Autowired
 	AuthorRepository authorRepository;
 
@@ -36,6 +36,15 @@ public class AuthorController<X> {
 	public Page<Author> getAllAuthors(Pageable pageable) {
 		return authorRepository.findAll(pageable);
 	}
+	
+	 @GetMapping("/authors/{authorId}")
+	    public ResponseEntity < Author > getBookById(
+	        @PathVariable(value = "authorId") Integer authorId) throws ResourceNotFoundException {
+	        Author author = authorRepository.findById(authorId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Author not found :: " + authorId));
+	        return ResponseEntity.ok().body(author);
+	    }
+	 
 
 	@PostMapping("/authors")
 	public Author createAuthor(@Valid @RequestBody Author author) {

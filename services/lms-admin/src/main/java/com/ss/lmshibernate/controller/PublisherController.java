@@ -36,6 +36,15 @@ public class PublisherController {
 	public Page<Publisher> getAllPublishers(Pageable pageable) {
 		return publisherRepository.findAll(pageable);
 	}
+	
+	 @GetMapping("/publishers/{publisherId}")
+	    public ResponseEntity < Publisher > getBookById(
+	        @PathVariable(value = "publisherId") Long publisherId) throws ResourceNotFoundException {
+	        Publisher publisher = publisherRepository.findById(publisherId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Publisher not found :: " + publisherId));
+	        return ResponseEntity.ok().body(publisher);
+	    }
+	 
 
 	@PostMapping("/publishers")
 	public Publisher createPublisher(@Valid @RequestBody Publisher publisher) {

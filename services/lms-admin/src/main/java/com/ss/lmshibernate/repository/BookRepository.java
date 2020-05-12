@@ -1,5 +1,6 @@
 package com.ss.lmshibernate.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,5 +11,6 @@ import com.ss.lmshibernate.entity.Book;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
+	List<Book> findByBookId(Long authorId);
 	Page<Book> findByBookId(Long bookId, Pageable pageable);
 }

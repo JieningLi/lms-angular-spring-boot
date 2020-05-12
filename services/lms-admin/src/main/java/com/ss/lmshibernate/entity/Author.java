@@ -2,8 +2,10 @@ package com.ss.lmshibernate.entity;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,6 +27,11 @@ public class Author implements Serializable {
 	@Column(name = "authorName")
 	public String authorName;
 
+	@OneToMany(mappedBy = "author", cascade = {
+		        CascadeType.ALL
+		    })
+	private List < Book > books;
+	  
 	public Author() {
 
 	}
@@ -55,6 +62,19 @@ public class Author implements Serializable {
 	 */
 	public void setAuthorName(String authorName) {
 		this.authorName = authorName;
+	}
+	/**
+	 * @return the books
+	 */
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	/**
+	 * @param books the books to set
+	 */
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.ss.lmshibernate.entity;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -36,7 +37,7 @@ public class Publisher implements Serializable {
 	private String publisherPhone;
 
 	@OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
-	private Set<Book> books = new HashSet<>();
+	private List < Book > books;
 
 	public Publisher() {
 
@@ -97,19 +98,20 @@ public class Publisher implements Serializable {
 	public void setPublisherPhone(String publisherPhone) {
 		this.publisherPhone = publisherPhone;
 	}
-
+	
 	/**
 	 * @return the books
 	 */
-	public Set<Book> getBooks() {
+	public List<Book> getBooks() {
 		return books;
 	}
 
 	/**
 	 * @param books the books to set
 	 */
-	public void setBooks(Set<Book> books) {
+	public void setBooks(List<Book> books) {
 		this.books = books;
 	}
+
 
 }
