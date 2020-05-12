@@ -1,0 +1,9 @@
+#Ignore Everything
+/*
+
+!src
+!data.sql
+!schema.sql
+!pom.xml
+!.gitignore
+!*.template
