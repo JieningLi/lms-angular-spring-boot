@@ -1,0 +1,112 @@
+<div class="container marketing">
+  <h3>
+    List of Authors in LMS. Total authors in LMS are: {{ totalAuthors }}.
+    <button type="button" class="btn btn-primary" (click)="addAuthor()">
+      Add Author
+    </button>
+    <div class="ds-l-row ds-u-margin-top--3">
+      <div class="ds-l-col--9">
+        <ngb-pagination
+          [collectionSize]="totalAuthors"
+          [(page)]="pager.currentPage"
+          [maxSize]="5"
+          [boundaryLinks]="true"
+          (pageChange)="setPage($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+    <div class="ds-l-row ds-u-margin-top--3">
+      Search:
+      <input type="text" [(ngModel)]="searchString" (input)="searchAuthors()" />
+    </div>
+  </h3>
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">Author ID</th>
+        <th scope="col">Author Name</th>
+        <th scope="col">Books</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of pagedAuthors | authsort; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ a.authorName }}</td>
+        <td>
+          <span *ngFor="let b of a.books">{{ b.title }}, </span>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="open(editAuthorModal, a)"
+          >
+            Edit
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="deleteAuthor(a.authorId)"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #editAuthorModal let-c="close" let-d="dismiss">
+  <div class="ds-c-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Author</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="d()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label"
+              >Author Name:</label
+            >
+            <input
+              class="form-control"
+              name="authorName"
+              [(ngModel)]="selectedAuthor.authorName"
+              value="{{ selectedAuthor.authorName }}"
+            />
+            <select multiple size="10"
+              >List of Books Author has written
+              <option *ngFor="let b of books">{{ b.title }}</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="c()"
+        >
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="updateAuthor()">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
