@@ -13,7 +13,7 @@
         <th scope="col">#</th>
         <th scope="col" sortable="title" (sort)="onSort($event)">Title</th>
         <th scope="col" sortable="author" (sort)="onSort($event)">Author(s)</th>
-        <th scope="col">Available in: </th>
+        <th scope="col">Available in Library (Copies): </th>
         <th scope="col">Reserve</th>
       </tr>
     </thead>
@@ -34,17 +34,29 @@
           <span *ngIf="book.bookCopies.length > 0; then thenBlock else elseBlock"></span>
           <ng-template #thenBlock>
             <span *ngFor="let bc of book.bookCopies; let j = index">
-              <p *ngIf="book.bookCopies.length > 1 && j != book.bookCopies.length">{{bc.branch.name}},</p>
-              <p *ngIf="book.bookCopies.length > 1 && j == book.bookCopies.length-1">{{bc.branch.name}}</p>
-              <p *ngIf="book.bookCopies.length == 1">{{bc.branch.name}}</p>
+              <span *ngIf="bc.noOfCopies > 0; then showBranchBlock; else elseBlock"></span>
+              <ng-template #showBranchBlock>
+                <p *ngIf="book.bookCopies.length > 1 && j != book.bookCopies.length">{{bc.branch.name}} ({{bc.noOfCopies}}),</p>
+                <p *ngIf="book.bookCopies.length > 1 && j == book.bookCopies.length-1">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
+                <p *ngIf="book.bookCopies.length == 1 ">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
+              </ng-template>
             </span>
           </ng-template>
           <ng-template #elseBlock>
-            Not Available
+            <p>Not Available</p>
           </ng-template>
         </td>
         <td>
-          Test Rent
+          <p *ngIf="book.bookCopies.length == 0; else thenRent">Not Available</p>
+          <ng-template #thenRent>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="open(rentBookModal, book)"
+            >
+              Reserve
+            </button>
+          </ng-template>
         </td>
       </tr>
     </tbody>
@@ -61,3 +73,36 @@
     </div>
   </div>
 </div>
+
+<ng-template #rentBookModal let-c="close" let-d="dismiss">
+  <div class="ds-c-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Reserve</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="d()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Reserve to rent {{selectedBook.title}} at:</p>
+
+        <form>
+          <div class="form-group">
+            <select multiple size="10"
+              >Rent from: 
+              <ng-container *ngFor="let b of selectedBook.bookCopies">
+                <option *ngIf="b.noOfCopies > 0">{{b.branch.name}}</option>
+              </ng-container>
+            </select>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

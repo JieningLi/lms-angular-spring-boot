@@ -93,9 +93,7 @@ export class SearchBookComponent implements OnInit  {
   }
   search(input: string){
     if(input.length === 0)
-    {
       this.searchBooks = this.books;
-    }
     let newBooks = new Array();
     this.books.forEach(element => {
         if(element.title.toLowerCase().includes(input.toLowerCase())){
@@ -135,9 +133,15 @@ export class SearchBookComponent implements OnInit  {
       return;
     }
     this.pager = this.pagerService.getPager(this.totalBooks, page, 10);
-    this.pagedBooks = this.searchBooks.slice(
-      this.pager.startIndex,
-      this.pager.endIndex + 1
-    );
+    if(this.searchBooks){
+      this.pagedBooks = this.searchBooks.slice(
+        this.pager.startIndex,
+        this.pager.endIndex + 1
+      );
+    }
+  }
+
+  reserveBook(){
+    
   }
 }
