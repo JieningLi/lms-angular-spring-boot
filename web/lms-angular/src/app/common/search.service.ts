@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { logging } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +6,7 @@ import { logging } from 'protractor';
 export class SearchService {
 
   constructor() { }
-  searchMessage: string;
+  searchMessage = '';
   searchInteger: Int16Array;
 
   changeMessage(message: string){
