@@ -18,6 +18,9 @@ import { LmsService } from "./common/lms.service";
 import { PagerService } from "./common/pager.service";
 import { AuthsortPipe } from "./common/pipes/authsort.pipe";
 import { LmsDirectDirective } from "./common/directive/lms-direct.directive";
+import { SearchBookComponent } from './borrower/search-book/search-book.component';
+import { CheckLoansComponent } from './borrower/check-loans/check-loans.component';
+
 
 @NgModule({
   declarations: [
@@ -32,6 +35,8 @@ import { LmsDirectDirective } from "./common/directive/lms-direct.directive";
     AuthorComponent,
     AuthsortPipe,
     LmsDirectDirective,
+    SearchBookComponent,
+    CheckLoansComponent
   ],
   imports: [
     BrowserModule,
