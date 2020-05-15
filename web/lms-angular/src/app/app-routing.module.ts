@@ -6,6 +6,8 @@ import { AdminComponent } from "./admin/admin.component";
 import { BorrowerComponent } from "./borrower/borrower.component";
 import { LibrarianComponent } from "./librarian/librarian.component";
 import { AuthorComponent } from "./admin/author/author.component";
+import { SearchBookComponent } from "./borrower/search-book/search-book.component";
+import { CheckLoansComponent } from './borrower/check-loans/check-loans.component';
 
 const routes: Routes = [
   {
@@ -28,6 +30,14 @@ const routes: Routes = [
       {
         path: "lms/borrower",
         component: BorrowerComponent,
+      },
+      {
+        path: "lms/borrower/search-book",
+        component: SearchBookComponent,
+      },
+      {
+        path: "lms/borrower/loan",
+        component: CheckLoansComponent,
       },
       {
         path: "lms/librarian",
