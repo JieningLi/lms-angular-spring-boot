@@ -94,12 +94,12 @@
 
         <form>
           <div class="form-group">
-            <select multiple size="10"
+            <mat-select multiple size="10"
               >Rent from: 
               <ng-container *ngFor="let b of selectedBook.bookCopies">
                 <option *ngIf="b.noOfCopies > 0">{{b.branch.name}}</option>
               </ng-container>
-            </select>
+            </mat-select>
           </div>
         </form>
       </div>
