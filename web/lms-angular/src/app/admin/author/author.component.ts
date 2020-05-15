@@ -40,7 +40,7 @@ export class AuthorComponent implements OnInit, AfterViewInit {
 
   loadAuthors() {
     this.lmsService
-      .getAll("http://localhost:8090/lms/readAuthors")
+      .getAll("http://localhost:8081/lms/admin/authors")
       .subscribe((resp) => {
         this.authors = resp;
         this.totalAuthors = this.authors.length;
@@ -50,7 +50,7 @@ export class AuthorComponent implements OnInit, AfterViewInit {
 
   loadBooks() {
     this.lmsService
-      .getAll("http://localhost:8090/lms/readBooks")
+      .getAll("http://localhost:8081/lms/admin/books")
       .subscribe((resp) => {
         this.books = resp;
       });
@@ -63,10 +63,10 @@ export class AuthorComponent implements OnInit, AfterViewInit {
       authorId: authorId,
     };
     this.lmsService
-      .postObj("http://localhost:8090/lms/updateAuthor", author)
+      .postObj("http://localhost:8081/lms/updateAuthor", author)
       .subscribe((res) => {
         this.lmsService
-          .getAll("http://localhost:8090/lms/readAuthors")
+          .getAll("http://localhost:8081/lms/readAuthors")
           .subscribe((resp) => {
             this.authors = resp;
             this.totalAuthors = this.authors.length;
@@ -76,7 +76,7 @@ export class AuthorComponent implements OnInit, AfterViewInit {
 
   updateAuthor(author) {
     this.lmsService
-      .postObj("http://localhost:8090/lms/updateAuthor", author)
+      .postObj("http://localhost:8081/lms/updateAuthor", author)
       .subscribe((res) => {
         this.loadAuthors();
         this.modalService.dismissAll();
