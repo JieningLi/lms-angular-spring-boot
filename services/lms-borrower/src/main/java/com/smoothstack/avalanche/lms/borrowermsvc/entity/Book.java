@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "tbl_book")
@@ -31,7 +32,6 @@ public class Book {
 	
 	@ManyToMany(mappedBy = "books", 
 			cascade = CascadeType.ALL)
-	@JsonIgnore
 	private List<Author> authors;
 	
 	@ManyToMany(mappedBy = "books", 
@@ -39,16 +39,16 @@ public class Book {
 	@JsonIgnore
 	private List<Genre> genres;
 	
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book",
+    @OneToMany(mappedBy = "book",
     		cascade = CascadeType.ALL,
 			orphanRemoval = true)
     @JsonIgnore
     private List<BookLoans> bookLoans;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "book",
+    @OneToMany(mappedBy = "book",
     		cascade = CascadeType.ALL,
-			orphanRemoval = true)
-    @JsonIgnore
+    		orphanRemoval =  true)
+    @JsonManagedReference
     private List<BookCopies> bookCopies;
     
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -107,6 +107,22 @@ public class Book {
 		this.publisher = publisher;
 	}
 	
+	public List<BookLoans> getBookLoans() {
+		return bookLoans;
+	}
+
+	public void setBookLoans(List<BookLoans> bookLoans) {
+		this.bookLoans = bookLoans;
+	}
+
+	public List<BookCopies> getBookCopies() {
+		return bookCopies;
+	}
+
+	public void setBookCopies(List<BookCopies> bookCopies) {
+		this.bookCopies = bookCopies;
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{
