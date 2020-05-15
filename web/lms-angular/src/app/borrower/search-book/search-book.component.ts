@@ -33,7 +33,7 @@ export class SearchBookComponent implements OnInit  {
   closeResult: any;
   pager:any = {};
   pagedBooks: any[]
-
+  connection: boolean;
   
   ngOnInit() {
     this.searchInput = this.searchService.searchMessage;
@@ -45,12 +45,18 @@ export class SearchBookComponent implements OnInit  {
   loadBooks(){
     this.lmsService
       .getAll("http://localhost:8083/lms/borrower/books")
-      .subscribe((resp)=>{
-        this.books = resp;
-        this.searchBooks = this.initialSearch(this.searchInput);
-        this.totalBooks = this.searchBooks.length;
-        this.setPage(1);
-      })
+      .subscribe(
+        (resp)=>{
+          this.connection = true;
+          this.books = resp;
+          this.searchBooks = this.initialSearch(this.searchInput);
+          this.totalBooks = this.searchBooks.length;
+          this.setPage(1);
+        },
+        (error)=>{
+          this.errMsg = "Cannot connect to server. Error at loading books. "
+          this.connection = false;
+        });
   }
 
   loadAuthors(){
@@ -58,6 +64,9 @@ export class SearchBookComponent implements OnInit  {
       .getAll("http://localhost:8083/lms/borrower/authors")
       .subscribe((resp)=>{
         this.authors = resp;
+      },(error)=>{
+        this.errMsg += "Error at loading authors. "
+        this.connection = false;
       })
   }
 
@@ -66,6 +75,9 @@ export class SearchBookComponent implements OnInit  {
     .getAll("http://localhost:8083/lms/borrower/branches")
     .subscribe((resp)=>{
       this.branches = resp;
+    },(error)=>{
+      this.errMsg += "Error at loading branches. "
+      this.connection = false;
     })
   }
 
