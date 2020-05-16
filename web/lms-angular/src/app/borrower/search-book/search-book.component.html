@@ -18,7 +18,6 @@
           <th scope="col" sortable="title" (sort)="onSort($event)">Title</th>
           <th scope="col" sortable="author" (sort)="onSort($event)">Author(s)</th>
           <th scope="col">Available in Library (Copies): </th>
-          <th scope="col">Reserve</th>
         </tr>
       </thead>
       <tbody>
@@ -94,15 +93,23 @@
         </div>
         <div class="modal-body">
           <p>Reserve to rent {{selectedBook.title}} at:</p>
-
           <form>
             <div class="form-group">
-              <select
+              <select [(ngModel)]="selectedBranch" name="selectedBranch"
                 >Rent from: 
                 <ng-container *ngFor="let b of selectedBook.bookCopies">
-                  <option *ngIf="b.noOfCopies > 0">{{b.branch.name}}</option>
+                  <option *ngIf="b.noOfCopies > 0" [ngValue]="b">{{b.branch.name}}</option>
                 </ng-container>
               </select>
+
+              <div>
+                <p>Enter Card No:</p>
+                <input
+                  class="form-control"
+                  name="Borrower Card Number"
+                  [(ngModel)]="cardNo"
+                />
+              </div>
             </div>
           </form>
         </div>
@@ -114,6 +121,9 @@
             (click)="c()"
           >
             Close
+          </button>
+          <button type="button" class="btn btn-primary" (click)="reserveBook()">
+            Save
           </button>
         </div>
       </div>
