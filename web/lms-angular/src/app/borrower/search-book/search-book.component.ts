@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterContentChecked } from '@angular/core';
-import { SearchService } from 'src/app/common/search.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { PagerService } from 'src/app/common/pager.service';
 import { LmsService } from 'src/app/common/lms.service';
+import { ActivatedRoute, Router} from '@angular/router'
 
 @Component({
   selector: 'app-search-book',
@@ -12,10 +12,11 @@ import { LmsService } from 'src/app/common/lms.service';
 export class SearchBookComponent implements OnInit  {
 
   constructor(
-    private searchService: SearchService,
     private lmsService: LmsService,
     private modalService: NgbModal,
-    private pagerService: PagerService
+    private pagerService: PagerService,
+    private router: Router,
+    private route: ActivatedRoute
     ) { }
   
   //for search input
@@ -33,10 +34,15 @@ export class SearchBookComponent implements OnInit  {
   closeResult: any;
   pager:any = {};
   pagedBooks: any[]
-
+  connection: boolean;
+  selectedBranch: any;
+  cardNo: any;
   
   ngOnInit() {
-    this.searchInput = this.searchService.searchMessage;
+    this.route.queryParams
+      .subscribe(params =>{
+        this.searchInput = params.search;
+      });
     this.loadBooks();
     this.loadAuthors();
     this.loadBranches();
@@ -45,12 +51,18 @@ export class SearchBookComponent implements OnInit  {
   loadBooks(){
     this.lmsService
       .getAll("http://localhost:8083/lms/borrower/books")
-      .subscribe((resp)=>{
-        this.books = resp;
-        this.searchBooks = this.initialSearch(this.searchInput);
-        this.totalBooks = this.searchBooks.length;
-        this.setPage(1);
-      })
+      .subscribe(
+        (resp)=>{
+          this.connection = true;
+          this.books = resp;
+          this.searchBooks = this.initialSearch(this.searchInput);
+          this.totalBooks = this.searchBooks.length;
+          this.setPage(1);
+        },
+        (error)=>{
+          this.errMsg = "Cannot connect to server. Error at loading books. "
+          this.connection = false;
+        });
   }
 
   loadAuthors(){
@@ -58,6 +70,9 @@ export class SearchBookComponent implements OnInit  {
       .getAll("http://localhost:8083/lms/borrower/authors")
       .subscribe((resp)=>{
         this.authors = resp;
+      },(error)=>{
+        this.errMsg += "Error at loading authors. "
+        this.connection = false;
       })
   }
 
@@ -66,9 +81,26 @@ export class SearchBookComponent implements OnInit  {
     .getAll("http://localhost:8083/lms/borrower/branches")
     .subscribe((resp)=>{
       this.branches = resp;
+    },(error)=>{
+      this.errMsg += "Error at loading branches. "
+      this.connection = false;
     })
   }
 
+  reserveBook(){
+    this.selectedBranch.noOfCopies--;
+
+    this.lmsService
+      .putObj("http://localhost:8083/lms/borrower/bookcopies:bookcopies", this.selectedBranch)
+      .subscribe((res) => {
+        this.modalService.dismissAll();
+      },
+      (err)=>{
+        this.errMsg = "Reserve Failed. Try Again."
+        this.connection = false;
+      });
+  
+  }
   //SEARCH INPUT
   initialSearch(input: string){
     if(input.length === 0)
@@ -109,6 +141,7 @@ export class SearchBookComponent implements OnInit  {
     )
     this.searchBooks = newBooks;
     this.totalBooks = this.searchBooks.length;
+    this.router.navigate(['/lms/borrower/search-book'], {queryParams: {search: this.searchInput}});
     this.setPage(1);
   }
 
@@ -141,7 +174,5 @@ export class SearchBookComponent implements OnInit  {
     }
   }
 
-  reserveBook(){
-    
-  }
+ 
 }

@@ -1,108 +1,137 @@
 <div class= "container marketing">
   <h3>
     Book Services
-    <div class="ds-l-row ds-u-margin-top--3">
-      Search:
-      <input type="text" [(ngModel)]="searchInput" name="searchInput"/>
-      <button class="btn btn-secondary" (click)=search(searchInput) role="button">Search</button>
-    </div>
   </h3>
-  <table class="table table-dark">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col" sortable="title" (sort)="onSort($event)">Title</th>
-        <th scope="col" sortable="author" (sort)="onSort($event)">Author(s)</th>
-        <th scope="col">Available in Library (Copies): </th>
-        <th scope="col">Reserve</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let book of pagedBooks; let i = index">
-        <th scope="row">{{i + 1}}</th>
-        <td>
-          {{book.title}}
-        </td>
-        <td>
-          <span *ngFor="let a of book.authors; let j = index">
-            <p *ngIf="book.authors.length > 1 && j != book.authors.length">{{a.name}},</p>
-            <p *ngIf="book.authors.length > 1 && j == book.authors.length-1">{{a.name}}</p>
-            <p *ngIf="book.authors.length == 1">{{a.name}}</p>
-          </span>
-        </td>
-        <td>
-          <span *ngIf="book.bookCopies.length > 0; then thenBlock else elseBlock"></span>
-          <ng-template #thenBlock>
-            <span *ngFor="let bc of book.bookCopies; let j = index">
-              <span *ngIf="bc.noOfCopies > 0; then showBranchBlock; else elseBlock"></span>
-              <ng-template #showBranchBlock>
-                <p *ngIf="book.bookCopies.length > 1 && j != book.bookCopies.length">{{bc.branch.name}} ({{bc.noOfCopies}}),</p>
-                <p *ngIf="book.bookCopies.length > 1 && j == book.bookCopies.length-1">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
-                <p *ngIf="book.bookCopies.length == 1 ">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
-              </ng-template>
+  <ng-container *ngIf="connection===true; then showView; else errorView"></ng-container>
+  <ng-template #showView>
+    <h3>
+      <div class="ds-l-row ds-u-margin-top--3">
+        Search:
+        <input type="text" [(ngModel)]="searchInput" name="searchInput"/>
+        <button class="btn btn-secondary" (click)=search(searchInput) role="button">Search</button>
+      </div>
+    </h3>
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col" sortable="title" (sort)="onSort($event)">Title</th>
+          <th scope="col" sortable="author" (sort)="onSort($event)">Author(s)</th>
+          <th scope="col">Available in Library (Copies): </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of pagedBooks; let i = index">
+          <th scope="row">{{i + 1}}</th>
+          <td>
+            {{book.title}}
+          </td>
+          <td>
+            <span *ngFor="let a of book.authors; let j = index">
+              <p *ngIf="book.authors.length > 1 && j != book.authors.length">{{a.name}},</p>
+              <p *ngIf="book.authors.length > 1 && j == book.authors.length-1">{{a.name}}</p>
+              <p *ngIf="book.authors.length == 1">{{a.name}}</p>
             </span>
-          </ng-template>
-          <ng-template #elseBlock>
-            <p>Not Available</p>
-          </ng-template>
-        </td>
-        <td>
-          <p *ngIf="book.bookCopies.length == 0; else thenRent">Not Available</p>
-          <ng-template #thenRent>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              (click)="open(rentBookModal, book)"
-            >
-              Reserve
-            </button>
-          </ng-template>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="ds-l-row ds-u-margin-top--3">
-    <div class="ds-l-col--9">
-      <ngb-pagination
-        [collectionSize]="totalBooks"
-        [(page)]="pager.currentPage"
-        [maxSize]="5"
-        [boundaryLinks]="true"
-        (pageChange)="setPage($event)"
-      ></ngb-pagination>
-    </div>
-  </div>
-</div>
-
-<ng-template #rentBookModal let-c="close" let-d="dismiss">
-  <div class="ds-c-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Reserve</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-          (click)="d()"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Reserve to rent {{selectedBook.title}} at:</p>
-
-        <form>
-          <div class="form-group">
-            <select multiple size="10"
-              >Rent from: 
-              <ng-container *ngFor="let b of selectedBook.bookCopies">
-                <option *ngIf="b.noOfCopies > 0">{{b.branch.name}}</option>
-              </ng-container>
-            </select>
-          </div>
-        </form>
+          </td>
+          <td>
+            <span *ngIf="book.bookCopies.length > 0; then thenBlock else elseBlock"></span>
+            <ng-template #thenBlock>
+              <span *ngFor="let bc of book.bookCopies; let j = index">
+                <span *ngIf="bc.noOfCopies > 0; then showBranchBlock; else elseBlock"></span>
+                <ng-template #showBranchBlock>
+                  <p *ngIf="book.bookCopies.length > 1 && j != book.bookCopies.length">{{bc.branch.name}} ({{bc.noOfCopies}}),</p>
+                  <p *ngIf="book.bookCopies.length > 1 && j == book.bookCopies.length-1">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
+                  <p *ngIf="book.bookCopies.length == 1 ">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
+                </ng-template>
+              </span>
+            </ng-template>
+            <ng-template #elseBlock>
+              <p>Not Available</p>
+            </ng-template>
+          </td>
+          <td>
+            <p *ngIf="book.bookCopies.length == 0; else thenRent">Not Available</p>
+            <ng-template #thenRent>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="open(rentBookModal, book)"
+              >
+                Reserve
+              </button>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="ds-l-row ds-u-margin-top--3">
+      <div class="ds-l-col--9">
+        <ngb-pagination
+          [collectionSize]="totalBooks"
+          [(page)]="pager.currentPage"
+          [maxSize]="5"
+          [boundaryLinks]="true"
+          (pageChange)="setPage($event)"
+        ></ngb-pagination>
       </div>
     </div>
+
+  <ng-template #rentBookModal let-c="close" let-d="dismiss">
+    <div class="ds-c-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Reserve</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="d()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Reserve to rent {{selectedBook.title}} at:</p>
+          <form>
+            <div class="form-group">
+              <select [(ngModel)]="selectedBranch" name="selectedBranch"
+                >Rent from: 
+                <ng-container *ngFor="let b of selectedBook.bookCopies">
+                  <option *ngIf="b.noOfCopies > 0" [ngValue]="b">{{b.branch.name}}</option>
+                </ng-container>
+              </select>
+
+              <div>
+                <p>Enter Card No:</p>
+                <input
+                  class="form-control"
+                  name="Borrower Card Number"
+                  [(ngModel)]="cardNo"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+            (click)="c()"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" (click)="reserveBook()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+<ng-template #errorView>
+  <div class="alert alert-danger" role="alert">
+    {{errMsg}}
   </div>
 </ng-template>
