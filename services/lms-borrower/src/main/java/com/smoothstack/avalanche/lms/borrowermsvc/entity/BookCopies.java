@@ -1,8 +1,6 @@
 package com.smoothstack.avalanche.lms.borrowermsvc.entity;
 
 
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -11,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 @Entity
@@ -25,6 +25,7 @@ public class BookCopies {
 
 	@MapsId("bookId")
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JsonBackReference
 	@JoinColumn(name = "bookId", referencedColumnName = "bookId",insertable = false, updatable = false, nullable = false)
 	private Book book;
 	

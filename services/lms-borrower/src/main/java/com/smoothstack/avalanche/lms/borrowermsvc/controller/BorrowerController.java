@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.smoothstack.avalanche.lms.borrowermsvc.entity.Author;
+import com.smoothstack.avalanche.lms.borrowermsvc.entity.Book;
 import com.smoothstack.avalanche.lms.borrowermsvc.entity.BookCopies;
 import com.smoothstack.avalanche.lms.borrowermsvc.entity.BookLoans;
 import com.smoothstack.avalanche.lms.borrowermsvc.entity.Branch;
@@ -26,6 +29,7 @@ import com.smoothstack.avalanche.lms.borrowermsvc.service.BorrowerService;
 
 import javassist.NotFoundException;
 
+@CrossOrigin(origins= "*", allowedHeaders="*")
 @RestController
 public class BorrowerController {
 
@@ -33,6 +37,47 @@ public class BorrowerController {
 	BorrowerService borrowerService;
 	
 	private static final Logger logger = LogManager.getLogger(BorrowerController.class);
+	
+	//Get Books
+	@GetMapping(path = "/lms/borrower/books")
+	public ResponseEntity<List<Book>> readBooks() throws NotFoundException{
+		logger.info("Borrower: Read Books");
+		try {
+			List<Book> searchBooks = borrowerService.readBooks();
+			return new ResponseEntity<List<Book>>(searchBooks, new HttpHeaders(), HttpStatus.OK);
+		}
+		catch(NotFoundException e) {
+			logger.error("Books Not Found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Books not found");
+		}
+	}
+	
+	@GetMapping(path = "/lms/borrower/authors")
+	public ResponseEntity<List<Author>> readAuthor() throws NotFoundException{
+		logger.info("Borrower: Read Authors");
+		try {
+			List<Author> searchAuthors = borrowerService.readAuthors();
+			return new ResponseEntity<List<Author>>(searchAuthors, new HttpHeaders(), HttpStatus.OK);
+		}
+		catch(NotFoundException e) {
+			logger.error("Authors Not Found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Authors not found");
+		}
+	}
+	
+	//Get Books By Title AND Author
+	@GetMapping(path = "/lms/borrower/books/{input}")
+	public ResponseEntity<List<Book>> readBooksByTitleAndAuthor(@Valid @PathVariable("input") String input) throws NotFoundException{
+		logger.info("Borrower: Search Books");
+		try {
+			List<Book> searchBooks = borrowerService.readBooks();
+			return new ResponseEntity<List<Book>>(searchBooks, new HttpHeaders(), HttpStatus.OK);
+		}
+		catch(NotFoundException e) {
+			logger.error("Books Not Found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Books not found");
+		}
+	}
 	/*
 	 * Functions for BookLoans
 	 */
@@ -48,7 +93,7 @@ public class BorrowerController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Loans not found with card_no: " + cardNo, e);
 		}
 	}
-
+	
 	@PostMapping(path = "/lms/borrower/bookloan")
 	public ResponseEntity<BookLoans> createLoan(@Valid @RequestBody BookLoans loan){
 		logger.info("Book Loans is being created by cardNo:" + loan.getBookLoansId().getCardNo() + " with BookId: " + loan.getBookLoansId().getBookId() + " from Branch: " + loan.getBookLoansId().getBranchId());
