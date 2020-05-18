@@ -1,10 +1,13 @@
 package com.ss.lmshibernate.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +24,7 @@ import com.ss.lmshibernate.repository.AuthorRepository;
 import com.ss.lmshibernate.repository.BookRepository;
 import com.ss.lmshibernate.repository.PublisherRepository;
 import com.ss.lmshibernate.exception.ResourceNotFoundException;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = "/lms/admin*")
 public class BookController {
@@ -35,9 +38,11 @@ public class BookController {
 	@Autowired
 	PublisherRepository publisherRepository;
 
+
 	@GetMapping("/books")
-	public Page<Book> getAllBooks(Pageable pageable) {
-		return bookRepository.findAll(pageable);
+	public List<Book> getAllBooks(){
+		 List<Book> books = bookRepository.findAll();
+		 return books;
 	}
 
 	@GetMapping("/books/{bookId}")
