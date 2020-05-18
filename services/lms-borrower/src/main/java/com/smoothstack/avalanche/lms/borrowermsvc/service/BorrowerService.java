@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.smoothstack.avalanche.lms.borrowermsvc.dao.AuthorDAO;
 import com.smoothstack.avalanche.lms.borrowermsvc.dao.BookCopiesDAO;
+import com.smoothstack.avalanche.lms.borrowermsvc.dao.BookDAO;
 import com.smoothstack.avalanche.lms.borrowermsvc.dao.BookLoansDAO;
 import com.smoothstack.avalanche.lms.borrowermsvc.dao.BranchDAO;
+import com.smoothstack.avalanche.lms.borrowermsvc.entity.Author;
+import com.smoothstack.avalanche.lms.borrowermsvc.entity.Book;
 import com.smoothstack.avalanche.lms.borrowermsvc.entity.BookCopies;
 import com.smoothstack.avalanche.lms.borrowermsvc.entity.BookLoans;
 import com.smoothstack.avalanche.lms.borrowermsvc.entity.Branch;
@@ -33,6 +36,9 @@ public class BorrowerService{
 	
 	@Autowired
 	private AuthorDAO authorDAO;
+	
+	@Autowired
+	private BookDAO bookDAO;
 
 	/*
 	 * Functions for returning a book
@@ -45,19 +51,26 @@ public class BorrowerService{
 		return searchLoans;
 	}
 	
-
 	public void updateBookLoans(BookLoans loan) throws IllegalArgumentException {
 		Optional<BookLoans> searchLoan = loansDAO.findById(loan.getBookLoansId());
 		searchLoan.orElseThrow(() -> new IllegalArgumentException("Loan not found:" + loan.toString()));
 		loansDAO.save(loan);
 	}
 
-	/*
-	 * Functions for returning a list of books based on author
-	 */
-	/*
-	 * TODO: Create in DAO readBookList(author author) if needed
-	 */
+
+	public List<Book> readBooks() throws NotFoundException {
+		List<Book> searchBook = bookDAO.findAll();
+		if(searchBook.size() <= 0)
+			throw new NotFoundException("Books not found");
+		return searchBook;
+	}
+	
+	public List<Author> readAuthors() throws NotFoundException {
+		List<Author> searchAuthor = authorDAO.findAll();
+		if(searchAuthor.size() <= 0)
+			throw new NotFoundException("Authors not found");
+		return searchAuthor;
+	}
 	
 	/*
 	 * Functions for checking out a book
