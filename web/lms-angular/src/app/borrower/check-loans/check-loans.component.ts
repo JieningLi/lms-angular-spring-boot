@@ -43,6 +43,7 @@ export class CheckLoansComponent implements OnInit {
           this.bookLoans = resp;
           this.totalLoans = this.bookLoans.length;
           this.setPage(1);
+          console.log(this.bookLoans);
         },
         (error)=>{
           this.errMsg = "Cannot connect to server. Error at loading books. "

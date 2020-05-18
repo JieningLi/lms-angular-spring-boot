@@ -23,7 +23,7 @@ export class LmsService {
     return this.http.put(url, obj, obj2);
   }
 
-  putObj(url, obj){
+  putObj_(url, obj){
     return this.http.put(url, obj);
   }
 }
