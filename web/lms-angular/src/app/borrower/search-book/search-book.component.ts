@@ -88,9 +88,12 @@ export class SearchBookComponent implements OnInit  {
   }
 
   reserveBook(){
-    //this.selectedBranch.noOfCopies--;
+    this.selectedBranch.noOfCopies--;
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
     this.lmsService
-      .putObj_("http://localhost:8083/lms/borrower/bookcopies:bookcopies", this.selectedBranch)
+      .putObj("http://localhost:8083/lms/borrower/bookcopies:bookcopies", this.selectedBranch, {headers: headers})
       .subscribe((res) => {
         this.modalService.dismissAll();
       },
@@ -114,7 +117,7 @@ export class SearchBookComponent implements OnInit  {
       dateDue: null
     }
     this.lmsService
-      .postObj("http://localhost:8083/lms/borrower/bookloan", bookLoan)
+      .postObj("http://localhost:8083/lms/borrower/bookloan", bookLoan, {headers: headers})
       .subscribe((res) => {
         this.modalService.dismissAll();
       },
