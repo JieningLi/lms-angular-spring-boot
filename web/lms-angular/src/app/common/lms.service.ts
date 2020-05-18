@@ -11,7 +11,15 @@ export class LmsService {
     return this.http.get(url);
   }
 
-  postObj(url, obj) {
-    return this.http.post(url, obj);
+  postObj(url, obj, obj2) {
+    return this.http.post(url, obj, obj2);
+  }
+
+  deleteObj(url) {
+    return this.http.delete(url);
+  }
+
+  putObj(url, obj, obj2) {
+    return this.http.put(url, obj, obj2);
   }
 }

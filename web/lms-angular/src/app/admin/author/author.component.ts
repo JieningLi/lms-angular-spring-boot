@@ -13,6 +13,7 @@ export class AuthorComponent implements OnInit, AfterViewInit {
   authors: any; //318
   books: any;
   selectedAuthor: any;
+  authorName: any;
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
@@ -24,12 +25,6 @@ export class AuthorComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private pagerService: PagerService
   ) {}
-
-  //Observables are promises which can be cancelled.
-  //Observables also can return more than one value/object.
-  //1> {{}} - expression
-  //2> () - events
-  //3> [()]="modelName"
 
   ngOnInit() {
     this.loadAuthors();
@@ -56,17 +51,30 @@ export class AuthorComponent implements OnInit, AfterViewInit {
       });
   }
 
-  addAuthor() {}
+  addAuthor(authorName) {
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    this.lmsService
+      .postObj(
+        "http://localhost:8081/lms/admin/authors/",
+        { authorName: authorName },
+        { headers: headers }
+      )
+      .subscribe((res) => {
+        this.loadAuthors();
+        this.modalService.dismissAll();
+      });
+  }
 
   deleteAuthor(authorId) {
     let author = {
       authorId: authorId,
     };
     this.lmsService
-      .postObj("http://localhost:8081/lms/updateAuthor", author)
+      .deleteObj("http://localhost:8081/lms/admin/authors/" + authorId)
       .subscribe((res) => {
         this.lmsService
-          .getAll("http://localhost:8081/lms/readAuthors")
+          .getAll("http://localhost:8081/lms/admin/authors")
           .subscribe((resp) => {
             this.authors = resp;
             this.totalAuthors = this.authors.length;
@@ -74,9 +82,19 @@ export class AuthorComponent implements OnInit, AfterViewInit {
       });
   }
 
-  updateAuthor(author) {
+  updateAuthor() {
+    let author = {
+      authorId: this.selectedAuthor.authorId,
+      authorName: this.selectedAuthor.authorName,
+    };
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
     this.lmsService
-      .postObj("http://localhost:8081/lms/updateAuthor", author)
+      .putObj(
+        "http://localhost:8081/lms/admin/authors/" + author.authorId,
+        { authorName: author.authorName },
+        { headers: headers }
+      )
       .subscribe((res) => {
         this.loadAuthors();
         this.modalService.dismissAll();
@@ -85,6 +103,20 @@ export class AuthorComponent implements OnInit, AfterViewInit {
 
   open(content, obj) {
     this.selectedAuthor = obj;
+    this.modalRef = this.modalService.open(content);
+    this.modalRef.result.then(
+      (result) => {
+        this.errMsg = "";
+        this.closeResult = `Closed with ${result}`;
+      },
+      (reason) => {
+        this.errMsg = "";
+        this.closeResult = `Dismissed`;
+      }
+    );
+  }
+
+  openAdd(content) {
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
       (result) => {
@@ -109,10 +141,11 @@ export class AuthorComponent implements OnInit, AfterViewInit {
     );
   }
 
-  searchAuthors() {
+  searchAuthors(searchString) {
+    console.log(searchString);
     this.lmsService
       .getAll(
-        `http://localhost:8090/lms/readAuthorsByName/${this.searchString}`
+        `http://localhost:8081/lms/admin//authors/search/${this.searchString}`
       )
       .subscribe((resp) => {
         this.authors = resp;
