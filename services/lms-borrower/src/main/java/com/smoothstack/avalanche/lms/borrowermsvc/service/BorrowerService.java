@@ -84,7 +84,6 @@ public class BorrowerService{
 	}
 
 	public List<BookCopies> readBookCopiesByBranch(Long branchId) throws NotFoundException {
-		System.out.println("branchId is" + branchId);
 		List<BookCopies> searchCopies = copiesDAO.findBookCopiesByBookCopiesId_branchId(branchId);
 		if(searchCopies.size() <= 0) {
 			throw new NotFoundException("Book Copies not found with Branch Id: " + branchId);
