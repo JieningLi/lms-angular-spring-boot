@@ -89,9 +89,10 @@ export class SearchBookComponent implements OnInit  {
 
   reserveBook(){
     this.selectedBranch.noOfCopies--;
-
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
     this.lmsService
-      .putObj("http://localhost:8083/lms/borrower/bookcopies:bookcopies", this.selectedBranch)
+      .putObj("http://localhost:8083/lms/borrower/bookcopies:bookcopies", this.selectedBranch, {headers: headers})
       .subscribe((res) => {
         this.modalService.dismissAll();
       },

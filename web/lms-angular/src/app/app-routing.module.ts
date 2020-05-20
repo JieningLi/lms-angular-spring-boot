@@ -8,6 +8,8 @@ import { LibrarianComponent } from "./librarian/librarian.component";
 import { AuthorComponent } from "./admin/author/author.component";
 import { SearchBookComponent } from "./borrower/search-book/search-book.component";
 import { CheckLoansComponent } from './borrower/check-loans/check-loans.component';
+import { LibraryComponent } from './librarian/library/library.component';
+import { UpdateLoanComponent} from './librarian/update-loan/update-loan.component';
 
 const routes: Routes = [
   {
@@ -47,6 +49,14 @@ const routes: Routes = [
         path: "lms/admin/author",
         component: AuthorComponent,
       },
+      {
+        path: 'lms/librarian/library',
+        component: LibraryComponent
+      },
+      {
+        path: 'lms/librarian/loan',
+        component: UpdateLoanComponent,
+      }
     ],
   },
 ];

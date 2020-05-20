@@ -16,8 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "tbl_book")
@@ -48,7 +48,7 @@ public class Book {
     @OneToMany(mappedBy = "book",
     		cascade = CascadeType.ALL,
     		orphanRemoval =  true)
-    @JsonManagedReference
+    @JsonBackReference
     private List<BookCopies> bookCopies;
     
 	@ManyToOne(fetch = FetchType.EAGER)

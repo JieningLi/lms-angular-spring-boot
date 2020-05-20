@@ -1,0 +1,157 @@
+<div class="container marketing">
+  <div class="row justify-content-md-center">
+    <div class="bg"></div>
+  </div>
+  <ng-container *ngIf="connection===true">
+    <ng-template [ngIf]="!editName" [ngIfElse]="editNameFormBlock">
+      <h2>
+        {{library.name}}
+        <button type="button" (click)="open(editBranchModal)"class="btn btn-default px-3">
+          <i class="plus" aria-hidden="true">Edit</i>
+        </button>
+      </h2>
+    </ng-template>
+    <ng-template #editNameFormBlock>
+      <form>
+        <input type="text" [(ngModel)]="inputName" name="inputName"/>
+      </form>
+    </ng-template>
+    <h5>
+      Address: {{library.address}}
+    </h5>
+  </ng-container>
+  <h5 class="clickable" (click)="open(bookCopiesModal)">
+    Available Books
+  </h5>
+</div>
+
+
+
+<ng-template #bookCopiesModal let-c="close" let-d="dismiss">
+  <div class="ds-c-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Book Copies Branch</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="d()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">No. of Copies</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let book of bookCopies; let i = index">
+              <th scope="row">
+                {{i+1}}           
+              </th>
+              <td>
+                {{book.book.title}}
+              </td>
+              <td>
+                {{book.noOfCopies}}
+              </td>
+              <td>
+                <button>
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="c()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="updateLibrary()"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #editBranchModal let-c="close" let-d="dismiss">
+  <div class="ds-c-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Branch</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="d()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group"> 
+            <label for="branch-name" class="col-form-label">
+              Branch Name:
+            </label>
+            <input 
+              class="form-control"
+              name="branchName"
+              [(ngModel)]="nameInput"
+              value="nameInput"
+            /> 
+          </div>
+          <div class="form-group">
+            <label for="branch-name" class="col-form-label">
+              Address:
+            </label>
+            <input 
+              class="form-control"
+              name="branchAddress"
+              [(ngModel)]="addressInput"
+              value="addressInput"
+            /> 
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="c()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="updateLibrary()"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

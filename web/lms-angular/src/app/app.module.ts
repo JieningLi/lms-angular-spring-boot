@@ -20,6 +20,8 @@ import { AuthsortPipe } from "./common/pipes/authsort.pipe";
 import { LmsDirectDirective } from "./common/directive/lms-direct.directive";
 import { SearchBookComponent } from './borrower/search-book/search-book.component';
 import { CheckLoansComponent } from './borrower/check-loans/check-loans.component';
+import { LibraryComponent } from './librarian/library/library.component';
+import { UpdateLoanComponent } from './librarian/update-loan/update-loan.component';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import { CheckLoansComponent } from './borrower/check-loans/check-loans.componen
     AuthsortPipe,
     LmsDirectDirective,
     SearchBookComponent,
-    CheckLoansComponent
+    CheckLoansComponent,
+    LibraryComponent,
+    UpdateLoanComponent
   ],
   imports: [
     BrowserModule,

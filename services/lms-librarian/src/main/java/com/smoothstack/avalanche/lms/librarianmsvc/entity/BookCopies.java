@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -25,7 +25,7 @@ public class BookCopies {
 
 	@MapsId("bookId")
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JsonBackReference
+	@JsonManagedReference
 	@JoinColumn(name = "bookId", referencedColumnName = "bookId",insertable = true, updatable = true, nullable = false)
 	private Book book;
 	

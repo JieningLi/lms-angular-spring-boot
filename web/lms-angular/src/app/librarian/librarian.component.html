@@ -1,3 +1,74 @@
-<p>
-  librarian works!
-</p>
+<div class="container marketing">
+  <!-- Three columns of text below the carousel -->
+  <div class="row">
+    <div class="col-lg-5">
+      <svg
+        class="bd-placeholder-img rounded-circle"
+        padding="25%"
+        width="140"
+        height="140"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+        focusable="false"
+        role="img"
+        aria-label="Placeholder: 140x140"
+      >
+        <title>Placeholder</title>
+        <rect width="100%" height="100%" fill="#777"></rect>
+        <text x="50%" y="50%" fill="#777" dy=".3em">140x140</text>
+      </svg>
+      <h2>Library Branch Service</h2>
+      <p>
+        Update a specific Branch. Update Address or Available Books.
+      </p>
+      <form class="form-inline waves-light" name="searchLibraryForm" mdbWavesEffect>
+        <div class="md-form mt-0">
+          <input [(ngModel)]="searchLibraryForm" name="searchLibraryForm" class="form-control mr-sm-2" type="text" placeholder="Library Number">
+        </div>
+        <div>
+          <button [disabled]="!searchLibraryForm" class="btn btn-secondary" (click)=searchLibrary()
+            >Search</button
+          >
+        </div>
+      </form>
+    </div>
+    <!-- /.col-lg-2 -->
+    <div class="col-lg-2"></div>
+    <div class="col-lg-5">
+      <svg
+        class="bd-placeholder-img rounded-circle"
+        width="140"
+        height="140"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+        focusable="false"
+        role="img"
+        aria-label="Placeholder: 140x140"
+      >
+        <title>Placeholder</title>
+        <rect width="100%" height="100%" fill="#777"></rect>
+        <text x="50%" y="50%" fill="#777" dy=".3em">140x140</text>
+      </svg>
+      <h2>Check Loans</h2>
+      <p>
+        Enter Card Number to check current and previously rented books.
+      </p>
+      <form class="form-inline waves-light" name="searchCardNoForm" mdbWavesEffect>
+        <div class="md-form mt-0">
+          <input [(ngModel)]="searchCardNoForm" name="searchCardNoForm" class="form-control mr-sm-2" type="text" placeholder="Card Number">
+        </div>
+        <div>
+          <button [disabled]="!searchCardNoForm" (click)="searchLoan()" class="btn btn-secondary" 
+            >Check</button
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- /.row -->
+  <hr class="featurette-divider" />
+
+  <!-- /END THE FEATURETTES -->
+</div>
+<!-- /.container -->
+

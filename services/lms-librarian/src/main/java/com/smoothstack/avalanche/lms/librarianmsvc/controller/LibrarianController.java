@@ -27,7 +27,7 @@ import com.smoothstack.avalanche.lms.librarianmsvc.service.LibrarianService;
 
 import javassist.NotFoundException;
 
-@CrossOrigin(origins="*",allowedHeaders="*")
+@CrossOrigin(origins="*", allowedHeaders= "*")
 @RestController
 public class LibrarianController {
 	
@@ -59,6 +59,8 @@ public class LibrarianController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}
 	}
+	
+	@CrossOrigin(origins="*", allowedHeaders="*")
 	@PutMapping(path = "/lms/librarian/branch")
 	public ResponseEntity<Branch> updateBranch(@Valid @RequestBody Branch branch){
 		logger.info("Branch is being updated");
