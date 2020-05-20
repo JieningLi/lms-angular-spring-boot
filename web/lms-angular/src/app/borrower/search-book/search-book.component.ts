@@ -91,7 +91,6 @@ export class SearchBookComponent implements OnInit  {
     this.selectedBranch.noOfCopies--;
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
-
     this.lmsService
       .putObj("http://localhost:8083/lms/borrower/bookcopies:bookcopies", this.selectedBranch, {headers: headers})
       .subscribe((res) => {

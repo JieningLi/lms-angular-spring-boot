@@ -10,6 +10,7 @@ export class BorrowerComponent implements OnInit {
 
   @Input('search-book-form')
   searchBookForm = "";
+
   searchLoanForm: Int16Array;
   constructor(private router: Router) { }
 
@@ -21,6 +22,10 @@ export class BorrowerComponent implements OnInit {
   }
 
   searchLoan(){
-    this.router.navigate(['lms/borrower/loan'], {queryParams: {cardNo: this.searchLoanForm}});
+    this.router.navigate(['/lms/borrower/loan'], {queryParams: {cardNo: this.searchLoanForm}});
+  }
+
+  isNumber(){
+    return typeof this.searchLoanForm==='number';
   }
 }
