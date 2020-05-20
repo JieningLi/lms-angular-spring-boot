@@ -9,7 +9,8 @@ import {Router} from '@angular/router'
 export class BorrowerComponent implements OnInit {
 
   @Input('search-book-form')
-  searchBookForm= "";
+  searchBookForm = "";
+
   searchLoanForm: Int16Array;
   constructor(private router: Router) { }
 
