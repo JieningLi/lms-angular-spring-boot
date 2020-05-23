@@ -1,8 +1,6 @@
 # Build a Library Management System with Angular and Spring Boot
 
-This project demonstrates how to build front end UI with Angular and connect to backend Microservices. I chose to use Spring Boot
-
-as my backend services.
+This project demonstrates how to build front end UI with Angular and connect to backend Microservices. I chose to use Spring Boot as my backend services.
 
 ## Run project
 
