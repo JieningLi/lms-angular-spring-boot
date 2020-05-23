@@ -12,6 +12,4 @@ This project demonstrates how to build front end UI with Angular and connect to 
 
 # Home page
 
-src="assets/img/admin-logo.png"
-
 ![home page](../web/lms-angular-outputs/output1.png)
