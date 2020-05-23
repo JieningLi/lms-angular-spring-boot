@@ -92,20 +92,55 @@ export class SearchBookComponent implements OnInit {
       );
   }
 
-  // reserveBook(){
-  //   this.selectedBranch.noOfCopies--;
-
-  //   this.lmsService
-  //     .putObj("http://localhost:8083/lms/borrower/bookcopies:bookcopies", this.selectedBranch)
-  //     .subscribe((res) => {
-  //       this.modalService.dismissAll();
-  //     },
-  //     (err)=>{
-  //       this.errMsg = "Reserve Failed. Try Again."
-  //       this.connection = false;
-  //     });
-
-  // }
+  reserveBook() {
+    this.selectedBranch.noOfCopies--;
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    this.lmsService
+      .putObj(
+        "http://localhost:8083/lms/borrower/bookcopies:bookcopies",
+        this.selectedBranch,
+        { headers: headers }
+      )
+      .subscribe(
+        (res) => {
+          this.modalService.dismissAll();
+        },
+        (err) => {
+          this.errMsg = "Reserve Failed. Try Again.";
+          this.connection = false;
+        }
+      );
+    let bookLoan = {
+      bookLoansId: {
+        bookId: this.selectedBook.id,
+        branchId: this.selectedBranch.branch.id,
+        cardNo: this.cardNo,
+      },
+      book: this.selectedBook,
+      borrower: {
+        cardNo: this.cardNo,
+      },
+      branch: this.selectedBranch.branch,
+      dateOut: null,
+      dateIn: null,
+      dateDue: null,
+    };
+    this.lmsService
+      .postObj("http://localhost:8083/lms/borrower/bookloan", bookLoan, {
+        headers: headers,
+      })
+      .subscribe(
+        (res) => {
+          this.modalService.dismissAll();
+        },
+        (err) => {
+          console.log(err);
+          this.errMsg = err.error.message;
+          this.connection = false;
+        }
+      );
+  }
   //SEARCH INPUT
   initialSearch(input: string) {
     if (input.length === 0) {
@@ -125,6 +160,7 @@ export class SearchBookComponent implements OnInit {
 
     return newBooks;
   }
+
   search(input: string) {
     if (input.length === 0) this.searchBooks = this.books;
     let newBooks = new Array();

@@ -26,8 +26,8 @@
           <input [(ngModel)]="searchBookForm" name="searchBookForm" class="form-control mr-sm-2" type="text" placeholder="Search">
         </div>
         <div>
-          <a class="btn btn-secondary" (click)=searchBook() role="button"
-            >Search</a
+          <button class="btn btn-secondary" (click)=searchBook()
+            >Search</button
           >
         </div>
       </form>
@@ -55,13 +55,13 @@
       </p>
       <form class="form-inline waves-light" name="searchLoanForm" mdbWavesEffect>
         <div class="md-form mt-0">
-          <input [(ngModel)]="searchLoanForm" name="searchLoanForm" class="form-control mr-sm-2" type="text" placeholder="Card Number">
+          <input [(ngModel)]="searchLoanForm" name="searchLoanForm" class="form-control mr-sm-2" type="text" placeholder="Card Number" required>
         </div>
-        <div>
-          <a (click)="searchLoan()" class="btn btn-secondary" role="button"
-            >Check</a
-          >
-        </div>
+          <div>
+            <button [disabled]="!searchLoanForm"(click)="searchLoan()" class="btn btn-secondary"
+              >Check</button
+            >
+          </div>
       </form>
     </div>
   </div>

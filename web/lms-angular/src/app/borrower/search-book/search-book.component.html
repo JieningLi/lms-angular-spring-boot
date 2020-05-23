@@ -37,17 +37,14 @@
             <span *ngIf="book.bookCopies.length > 0; then thenBlock else elseBlock"></span>
             <ng-template #thenBlock>
               <span *ngFor="let bc of book.bookCopies; let j = index">
-                <span *ngIf="bc.noOfCopies > 0; then showBranchBlock; else elseBlock"></span>
-                <ng-template #showBranchBlock>
+
                   <p *ngIf="book.bookCopies.length > 1 && j != book.bookCopies.length">{{bc.branch.name}} ({{bc.noOfCopies}}),</p>
                   <p *ngIf="book.bookCopies.length > 1 && j == book.bookCopies.length-1">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
                   <p *ngIf="book.bookCopies.length == 1 ">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
-                </ng-template>
+
               </span>
             </ng-template>
-            <ng-template #elseBlock>
-              <p>Not Available</p>
-            </ng-template>
+
           </td>
           <td>
             <p *ngIf="book.bookCopies.length == 0; else thenRent">Not Available</p>

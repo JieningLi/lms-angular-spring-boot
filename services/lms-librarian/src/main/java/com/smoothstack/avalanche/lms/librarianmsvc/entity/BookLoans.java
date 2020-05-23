@@ -1,4 +1,4 @@
-package com.smoothstack.avalanche.lms.borrowermsvc.entity;
+package com.smoothstack.avalanche.lms.librarianmsvc.entity;
 
 
 import java.util.Date;
