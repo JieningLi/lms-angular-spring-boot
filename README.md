@@ -10,6 +10,14 @@ This project demonstrates how to build front end UI with Angular and connect to 
 
 ## Sample outputs
 
-# Home page
+### Home page
 
 ![home page](./web/lms-angular-outputs/output1.png)
+
+### Admin service
+
+![admin page](./web/lms-angular-outputs/output2.png)
+
+### Author service
+
+![author page](./web/lms-angular-outputs/output3.png)
