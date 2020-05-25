@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.smoothstack.avalanche.lms.librarianmsvc.entity.Book;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.BookCopies;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.Branch;
 import com.smoothstack.avalanche.lms.librarianmsvc.service.LibrarianService;
@@ -88,6 +89,32 @@ public class LibrarianController {
 		}
 	}
 	
+	@GetMapping(path= "/lms/librarian/books")
+	public ResponseEntity<List<Book>> readBooks() throws NotFoundException{
+		logger.info("Borrower: Read Books");
+		try {
+			List<Book> searchBooks = librarianService.readBooks();
+			return new ResponseEntity<List<Book>>(searchBooks, new HttpHeaders(), HttpStatus.OK);
+		}
+		catch(NotFoundException e) {
+			logger.error("Books Not Found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Books not found");
+		}
+	}
+	
+	@GetMapping(path= "/lms/librarian/unlistedbooks/{branchId}")
+	public ResponseEntity<List<Book>> readBooksNotInLibrary(@Valid @PathVariable("branchId") Long branchId) throws NotFoundException{
+		logger.info("Borrower: Read Books");
+		try {
+			List<Book> searchBooks = librarianService.readBooksNotInLibrary(branchId);
+			return new ResponseEntity<List<Book>>(searchBooks, new HttpHeaders(), HttpStatus.OK);
+		}
+		catch(NotFoundException e) {
+			logger.error("Books Not Found");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Books not found");
+		}
+	}
+	
 	@PostMapping(path = "/lms/librarian/bookcopies")
 	public ResponseEntity<BookCopies> createBookCopy(@Valid @RequestBody BookCopies bc) throws ClassNotFoundException, SQLException, NotFoundException{
 		logger.info("Checking out book: " + bc.getBookCopiesId().getBookId() + "from :" + bc.getBookCopiesId().getBranchId());
@@ -101,6 +128,7 @@ public class LibrarianController {
 		}
 	}
 	
+	@CrossOrigin(origins="*", allowedHeaders="*")
 	@PutMapping(path = "/lms/librarian/bookcopies")
 	public ResponseEntity<BookCopies> updateBookCopy(@Valid @RequestBody BookCopies bc) throws ClassNotFoundException, SQLException, NotFoundException{
 		logger.info("Checking out book: " + bc.getBookCopiesId().getBookId() + "from :" + bc.getBookCopiesId().getBranchId());
