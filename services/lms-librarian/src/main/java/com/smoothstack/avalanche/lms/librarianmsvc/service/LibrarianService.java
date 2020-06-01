@@ -16,6 +16,7 @@ import com.smoothstack.avalanche.lms.librarianmsvc.dao.BookLoansDAO;
 import com.smoothstack.avalanche.lms.librarianmsvc.dao.BranchDAO;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.Book;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.BookCopies;
+import com.smoothstack.avalanche.lms.librarianmsvc.entity.BookLoans;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.Branch;
 
 import javassist.NotFoundException;
@@ -125,4 +126,14 @@ public class LibrarianService {
     	copiesDAO.delete(bc);
     }
     
+    /*
+	 * Functions for returning a book
+	 */
+	public List<BookLoans> readLoansByCardNo(Long cardNo) throws NotFoundException {
+		List<BookLoans> searchLoans = loansDAO.findByCardNo(cardNo);
+		if(searchLoans.size() <= 0) {
+			throw new NotFoundException("Loans not found from card_no: " + cardNo);
+		}
+		return searchLoans;
+	}
 }

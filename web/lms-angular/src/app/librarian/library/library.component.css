@@ -9,6 +9,9 @@ h2{
   text-decoration: underline;
   cursor: pointer;
 }
+.app-modal-window .modal-dialog {
+  width: 1000px;
+}
 .bg {
     /* The image used */
     background: url("../../../assets/img/library-image.png") no-repeat center center fixed;

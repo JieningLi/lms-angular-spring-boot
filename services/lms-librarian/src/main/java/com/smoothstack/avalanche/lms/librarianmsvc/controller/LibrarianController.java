@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.Book;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.BookCopies;
+import com.smoothstack.avalanche.lms.librarianmsvc.entity.BookLoans;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.Branch;
 import com.smoothstack.avalanche.lms.librarianmsvc.service.LibrarianService;
 
@@ -158,5 +159,16 @@ public class LibrarianController {
 		}
 	}
 	
+	@GetMapping(path = "/lms/librarian/bookloans/{cardNo}")
+	public ResponseEntity<List<BookLoans>> readLoansByCardNo(@Valid @PathVariable("cardNo") Long cardNo) throws NotFoundException{
+		logger.info("Borrower: " + cardNo + " has logged in to look at Book Loans.");
+		try{
+			List<BookLoans> searchLoans = librarianService.readLoansByCardNo(cardNo);
+			return new ResponseEntity<List<BookLoans>>(searchLoans, new HttpHeaders(), HttpStatus.OK);
+		} catch(NotFoundException e) {
+			logger.error("Loans not found with card_no: " + cardNo);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Loans not found with card_no: " + cardNo, e);
+		}
+	}
 	
 }
