@@ -1,5 +1,6 @@
 package com.smoothstack.avalanche.lms.librarianmsvc.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,9 @@ import com.smoothstack.avalanche.lms.librarianmsvc.dao.BookCopiesDAO;
 import com.smoothstack.avalanche.lms.librarianmsvc.dao.BookDAO;
 import com.smoothstack.avalanche.lms.librarianmsvc.dao.BookLoansDAO;
 import com.smoothstack.avalanche.lms.librarianmsvc.dao.BranchDAO;
+import com.smoothstack.avalanche.lms.librarianmsvc.entity.Book;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.BookCopies;
+import com.smoothstack.avalanche.lms.librarianmsvc.entity.BookLoans;
 import com.smoothstack.avalanche.lms.librarianmsvc.entity.Branch;
 
 import javassist.NotFoundException;
@@ -60,6 +63,31 @@ public class LibrarianService {
 		branchDAO.save(branch);
 	}
 	
+	//books
+	public List<Book> readBooks() throws NotFoundException {
+		List<Book> searchBook = bookDAO.findAll();
+		if(searchBook.size() <= 0)
+			throw new NotFoundException("Books not found");
+		return searchBook;
+	}
+	
+	//books not in library
+	public List<Book> readBooksNotInLibrary(Long id) throws NotFoundException{
+		List<Book> searchBook = bookDAO.findAll();
+		List<BookCopies> searchBookCopies = copiesDAO.findBookCopiesByBookCopiesId_branchId(id);
+		List<Book> unlistedBooks = new ArrayList<Book>();
+		List<Book> listedBooks = new ArrayList<Book>();
+		searchBookCopies.forEach(bc -> {
+			listedBooks.add(bc.getBook());
+		});
+		searchBook.forEach(book ->{
+			if(!listedBooks.contains(book)) {
+				unlistedBooks.add(book);
+			}
+		});
+		return unlistedBooks;
+	}
+	
 	//Book Copies Function
 	public List<BookCopies> readBookCopiesByBranch(Long branchId) throws NotFoundException {
 		System.out.println("branchId is" + branchId);
@@ -98,4 +126,14 @@ public class LibrarianService {
     	copiesDAO.delete(bc);
     }
     
+    /*
+	 * Functions for returning a book
+	 */
+	public List<BookLoans> readLoansByCardNo(Long cardNo) throws NotFoundException {
+		List<BookLoans> searchLoans = loansDAO.findByCardNo(cardNo);
+		if(searchLoans.size() <= 0) {
+			throw new NotFoundException("Loans not found from card_no: " + cardNo);
+		}
+		return searchLoans;
+	}
 }

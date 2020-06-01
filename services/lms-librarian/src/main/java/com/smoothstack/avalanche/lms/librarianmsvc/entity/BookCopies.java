@@ -25,7 +25,6 @@ public class BookCopies {
 
 	@MapsId("bookId")
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JsonManagedReference
 	@JoinColumn(name = "bookId", referencedColumnName = "bookId",insertable = true, updatable = true, nullable = false)
 	private Book book;
 	

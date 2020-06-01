@@ -20,8 +20,8 @@
       Address: {{library.address}}
     </h5>
   </ng-container>
-  <h5 class="clickable" (click)="open(bookCopiesModal)">
-    Available Books
+  <h5>
+    <a class="clickable" (click)="open(bookCopiesModal)">Available Books</a>
   </h5>
 </div>
 
@@ -60,17 +60,82 @@
               <td>
                 {{book.book.title}}
               </td>
-              <td>
-                {{book.noOfCopies}}
-              </td>
-              <td>
-                <button>
-                  Edit
-                </button>
-              </td>
-            </tr>
+              <ng-container *ngIf="editNoOfCopies==true && i==editRowIndex; else elseShowBc">
+                <td>
+                  <form>
+                    <input [(ngModel)]="noOfCopiesInput" name="noOfCopiesInput" type="number"/>
+                  </form>
+                </td>
+                <td>
+                  <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="updateBookCopy()"
+                  >
+                      Save
+                  </button>
+                  <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="closeEditRow()"
+                  >
+                    Close
+                  </button>
+                </td>  
+              </ng-container>
+                <ng-template #elseShowBc>
+                  <td>
+                    <p>{{book.noOfCopies}}</p>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="editRow(book, i)"
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </ng-template>
+              </tr>
+
+            <ng-container *ngIf="addBookForm"> 
+              <tr>
+                <td>#</td>
+                <td>
+                  <form>
+                    <select [(ngModel)]="selectedBook" name="selectedBook">
+                      <ng-container *ngFor="let b of booksNotInLibrary" >
+                        <option [ngValue]="b"> 
+                          {{b.title}}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </form>
+                </td>
+                <td>
+                  <form>
+                    <input [(ngModel)]="noOfCopiesInput" name="noOfCopiesInput" type="number"/>
+                  </form>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-secondary" (click)="addBookCopy()">
+                    Add
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
+        <ng-container *ngIf="!addBookForm">
+          <button 
+          type="button" 
+          class="btn btn-secondary"
+          (click)="createAddForm()"
+          >
+          Add Book
+          </button>
+        </ng-container>
       </div>
       <div class="modal-footer">
         <button
@@ -80,13 +145,6 @@
           (click)="c()"
         >
           Close
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="updateLibrary()"
-        >
-          Save
         </button>
       </div>
     </div>

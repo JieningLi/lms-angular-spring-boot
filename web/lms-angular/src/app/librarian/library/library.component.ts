@@ -21,16 +21,28 @@ export class LibraryComponent implements OnInit {
 
   searchInput: string;
   library: any;
+  books: any;
   connection: any;
   errMsg: string;
-  nameInput: string;
-  addressInput: string;
-  editName: boolean;
-  editAddress: boolean;
+
   private modalRef: NgbModalRef;
   closeResult: any;
   bookCopies: any;
+  booksInLibrary: Array<any> = [];
+  booksNotInLibrary: any;
+  
+  selectedBook: any;
+  
+  nameInput: string;
+  addressInput: string;
+  selectedCopies: any;
+  noOfCopiesInput: Int16Array;
+  editName: boolean;
+  editAddress: boolean;
+  editNoOfCopies: boolean;
+  editRowIndex: Int16Array;
 
+  addBookForm: boolean;
 
   ngOnInit() {
     this.route.queryParams
@@ -39,6 +51,7 @@ export class LibraryComponent implements OnInit {
       });
     this.loadLibrary();
     this.loadBookCopies();
+    this.addBookForm = false;
     document.body.classList.add('bg-img');
   }
 
@@ -60,6 +73,19 @@ export class LibraryComponent implements OnInit {
         });
   }
 
+  loadUnlistedBooks(){
+    this.lmsService
+      .getAll(`http://localhost:8082/lms/librarian/unlistedbooks/${this.searchInput}`)
+      .subscribe(
+        (resp)=>{
+          this.connection=true;
+          this.booksNotInLibrary = resp;
+        },
+        (err) =>{
+          this.errMsg = err.error.message;
+        }
+      )
+  }
   loadBookCopies(){
     this.lmsService
       .getAll(`http://localhost:8082/lms/librarian/bookcopies/${this.searchInput}`)
@@ -67,12 +93,18 @@ export class LibraryComponent implements OnInit {
         (resp)=>{
           this.connection = true;
           this.bookCopies=resp;
+          this.bookCopies.forEach(bc => {
+            this.booksInLibrary.push(bc.book);
+          });
+          this.loadUnlistedBooks();
         },
         (error)=>{
           this.errMsg = "Cannot connect to server. Error at loading book copies. "
           this.connection = false;
         });
+
   }
+
   updateLibrary(){
     let newLibrary = {
       id: this.library.id,
@@ -94,6 +126,58 @@ export class LibraryComponent implements OnInit {
         });
   }
 
+  addBookCopy(){
+    let newCopies= {
+      bookCopiesId: {
+        bookId: this.selectedBook.id,
+        branchId: this.library.id,
+      },
+      noOfCopies:this.noOfCopiesInput,
+      book: this.selectedBook,
+      branch: this.library
+    }
+    let headers= new Headers();
+    headers.append("Content-Type", "application/json");
+    this.lmsService
+      .postObj(`http://localhost:8082/lms/librarian/bookcopies`, newCopies, {headers: headers})
+      .subscribe((resp)=>{
+        this.loadBookCopies();
+      });
+    this.addBookForm = false;
+
+  }
+
+  updateBookCopy(){
+    this.selectedCopies.noOfCopies = this.noOfCopiesInput;
+    let newCopies = {
+      bookCopiesId: this.selectedCopies.bookCopiesId,
+      noOfCopies: this.noOfCopiesInput,
+      book: this.selectedCopies.book,
+      branch: this.selectedCopies.branch
+    }
+    let headers= new Headers();
+    headers.append("Content-Type", "application/json");
+    this.lmsService
+      .putObj(`http://localhost:8082/lms/librarian/bookcopies`, newCopies , {headers: headers})
+      .subscribe(
+        (resp)=>{
+          this.loadBookCopies();
+        },
+        (error)=>{
+          this.errMsg = error.error.message;
+          this.connection = false;
+        });
+        this.closeEditRow();
+  }
+
+  editRow(copy, index){
+    this.selectedCopies = copy;
+    this.editRowIndex = index;
+    this.editNoOfCopies = true;
+    this.noOfCopiesInput = copy.noOfCopies;
+    console.log(this.editRowIndex);
+    console.log(this.selectedCopies);
+  }
   open(content) {
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
@@ -107,8 +191,15 @@ export class LibraryComponent implements OnInit {
       }
     );
   }
+  closeEditRow(){
+    this.editNoOfCopies = false;
+  }
   editNameForm(){
     this.editName = !this.editName;
+  }
+
+  createAddForm(){
+    this.addBookForm = !this.addBookForm;
   }
 
 }
