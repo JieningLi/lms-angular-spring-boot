@@ -11,7 +11,7 @@ import { CheckLoansComponent } from './borrower/check-loans/check-loans.componen
 import { LibraryComponent } from './librarian/library/library.component';
 import { UpdateLoanComponent} from './librarian/update-loan/update-loan.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: "",
     component: LayoutComponent,

@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgModule } from '@angular/core';
 import {Router} from '@angular/router'
+
 
 @Component({
   selector: 'app-borrower',
@@ -23,9 +24,5 @@ export class BorrowerComponent implements OnInit {
 
   searchLoan(){
     this.router.navigate(['/lms/borrower/loan'], {queryParams: {cardNo: this.searchLoanForm}});
-  }
-
-  isNumber(){
-    return typeof this.searchLoanForm==='number';
   }
 }
