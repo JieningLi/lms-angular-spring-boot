@@ -5,13 +5,12 @@ import { FormsModule } from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {RouterModule, Routes, Router} from '@angular/router';
 describe('BorrowerComponent', () => {
-  let component: BorrowerComponent;
   let fixture: ComponentFixture<BorrowerComponent>;
   let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, RouterModule.forRoot([])],
+      imports: [FormsModule, RouterTestingModule.withRoutes([])],
       declarations: [ BorrowerComponent ]
     })
     .compileComponents();

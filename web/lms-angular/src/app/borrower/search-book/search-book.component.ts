@@ -24,7 +24,7 @@ export class SearchBookComponent implements OnInit {
   totalBooks = 0;
   //array of books picked
   books: any;
-  searchBooks: any;
+  searchBooks: any[];
   selectedBook: any;
   authors: any;
   branches: any;
@@ -58,6 +58,7 @@ export class SearchBookComponent implements OnInit {
           this.setPage(1);
         },
         (error) => {
+          console.log(error);
           this.errMsg = "Cannot connect to server. Error at loading books. ";
           this.connection = false;
         }
@@ -72,7 +73,7 @@ export class SearchBookComponent implements OnInit {
           this.authors = resp;
         },
         (error) => {
-          this.errMsg += "Error at loading authors. ";
+          this.errMsg = "Error at loading authors. ";
           this.connection = false;
         }
       );
@@ -86,7 +87,7 @@ export class SearchBookComponent implements OnInit {
           this.branches = resp;
         },
         (error) => {
-          this.errMsg += "Error at loading branches. ";
+          this.errMsg = "Error at loading branches. ";
           this.connection = false;
         }
       );
@@ -150,7 +151,8 @@ export class SearchBookComponent implements OnInit {
     this.books.forEach((element) => {
       if (element.title.toLowerCase().includes(input.toLowerCase())) {
         newBooks.push(element);
-      } else {
+      } 
+      else {
         element.authors.forEach((author) => {
           if (author.name.toLowerCase().includes(input.toLowerCase()))
             newBooks.push(element);
@@ -177,7 +179,7 @@ export class SearchBookComponent implements OnInit {
     this.searchBooks = newBooks;
     this.totalBooks = this.searchBooks.length;
     this.router.navigate(["/lms/borrower/search-book"], {
-      queryParams: { search: this.searchInput },
+      queryParams: { search: input },
     });
     this.setPage(1);
   }
