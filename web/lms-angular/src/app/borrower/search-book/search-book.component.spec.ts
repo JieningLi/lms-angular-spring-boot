@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, async, ComponentFixture, TestBed, tick } from '@angular/core/testing';
 
 import { SearchBookComponent } from './search-book.component';
 import { NgbModal, NgbModalRef, NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -12,11 +12,17 @@ import { Observable, of, throwError } from 'rxjs';
 import { componentNeedsResolution } from '@angular/core/src/metadata/resource_loading';
 
 
+//Mock Modal Ref Class
+export class MockNgbModalRef{
+  result: Promise<any> = new Promise((resolve, reject) => resolve("mock"));
+}
+
 describe('SearchBookComponent', () => {
   let component: SearchBookComponent;
   let fixture: ComponentFixture<SearchBookComponent>;
   let lmsService: LmsService;
   let modalService: NgbModal;
+  let mockModalRef: MockNgbModalRef = new MockNgbModalRef();
   let pagerService: PagerService;
   let router: Router;
   let route: ActivatedRoute;
@@ -268,11 +274,161 @@ describe('SearchBookComponent', () => {
       },
     ];
     component.books = books;
-
-
     component.search("Author");
     component.searchInput = "Author";
     expect(component.searchBooks).toEqual(books);
    
+  });
+
+  it("should open modal", fakeAsync(()=>{
+    const mockBook = {
+      id: 1,
+      title: "Test Book 1",
+      authors:[{
+        id: 1,
+        name: "Test Author 1"
+      }],
+      bookCopies:{
+        bookCopiesId: {
+          branchId: 1,
+          bookId: 1
+        },
+        branch:{
+          id: 1,
+          name: "Test Branch 1",
+          address: "Test Address 1"
+        },
+        noOfCopies: 10
+      }
+    };
+    spyOn(modalService, "open").and.returnValue(mockModalRef);
+    component.open("rentBookModal", mockBook);
+  }));
+
+  it("should close modal", fakeAsync(()=>{
+    const mockBook = {
+      id: 1,
+      title: "Test Book 1",
+      authors:[{
+        id: 1,
+        name: "Test Author 1"
+      }],
+      bookCopies:{
+        bookCopiesId: {
+          branchId: 1,
+          bookId: 1
+        },
+        branch:{
+          id: 1,
+          name: "Test Branch 1",
+          address: "Test Address 1"
+        },
+        noOfCopies: 10
+      }
+    };
+    spyOn(modalService, "open").and.returnValue(mockModalRef);
+    mockModalRef.result = new Promise((resolve, reject) => reject("test error"));
+    component.open("rentBookModal", mockBook);
+    tick();
+    expect(component.closeResult).toBe("Dismissed")
+  }));
+
+  it("should reserve book working intended", ()=> {
+    const mockBookCopy = {
+        bookCopiesId: {
+          branchId: 1,
+          bookId: 1
+        },
+        branch:{
+          id: 1,
+          name: "Test Branch 1",
+          address: "Test Address 1"
+        },
+        noOfCopies: 10
+      };
+    const mockBook = {
+      id: 1,
+      title: "Test Book 1",
+      authors:[{
+        id: 1,
+        name: "Test Author 1"
+      }],
+      bookCopies: [mockBookCopy]
+    }
+    component.cardNo = 1;
+    spyOn(lmsService, "putObj").and.returnValue(of(mockBookCopy));
+    spyOn(lmsService, "postObj").and.returnValue(of(mockBook));
+    component.selectedBranch = mockBookCopy;
+    component.selectedBook = mockBook;
+    component.reserveBook();
+    expect(modalService.dismissAll).toHaveBeenCalled;
+  });
+
+  it("should reserve book - putObj not working", ()=> {
+    const mockBookCopy = {
+        bookCopiesId: {
+          branchId: 1,
+          bookId: 1
+        },
+        branch:{
+          id: 1,
+          name: "Test Branch 1",
+          address: "Test Address 1"
+        },
+        noOfCopies: 10
+      };
+    const mockBook = {
+      id: 1,
+      title: "Test Book 1",
+      authors:[{
+        id: 1,
+        name: "Test Author 1"
+      }],
+      bookCopies: [mockBookCopy]
+    }
+    component.selectedBranch = mockBookCopy;
+    component.selectedBook = mockBook;
+    component.cardNo = 1;
+    spyOn(lmsService, "putObj").and.returnValue(throwError({status: 400}));
+    component.reserveBook();
+    expect(component.errMsg).toBe("Reserve Failed. Try Again.");
+    expect(component.connection).toBe(false);
+  });
+
+  it("should reserve book - postObj not working", ()=> {
+    const mockBookCopy = {
+        bookCopiesId: {
+          branchId: 1,
+          bookId: 1
+        },
+        branch:{
+          id: 1,
+          name: "Test Branch 1",
+          address: "Test Address 1"
+        },
+        noOfCopies: 10
+      };
+    const mockBook = {
+      id: 1,
+      title: "Test Book 1",
+      authors:[{
+        id: 1,
+        name: "Test Author 1"
+      }],
+      bookCopies: [mockBookCopy]
+    }
+    component.selectedBranch = mockBookCopy;
+    component.selectedBook = mockBook;
+    component.cardNo = 1;
+    spyOn(lmsService, "putObj").and.returnValue(of(mockBookCopy));
+    spyOn(lmsService, "postObj").and.returnValue(throwError({status: 404}));
+    component.reserveBook();
+    expect(component.errMsg).toBe("Create Loan Failed");
+    expect(component.connection).toBe(false);
+  });
+
+  it('setPage should return none if page = 0', ()=>{
+    const setPager = component.setPage(0);
+    expect(setPager).toBe(undefined);
   });
 });

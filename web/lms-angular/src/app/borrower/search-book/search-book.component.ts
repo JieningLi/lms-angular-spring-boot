@@ -24,7 +24,7 @@ export class SearchBookComponent implements OnInit {
   totalBooks = 0;
   //array of books picked
   books: any;
-  searchBooks: any[];
+  searchBooks: any;
   selectedBook: any;
   authors: any;
   branches: any;
@@ -58,7 +58,6 @@ export class SearchBookComponent implements OnInit {
           this.setPage(1);
         },
         (error) => {
-          console.log(error);
           this.errMsg = "Cannot connect to server. Error at loading books. ";
           this.connection = false;
         }
@@ -106,38 +105,38 @@ export class SearchBookComponent implements OnInit {
       .subscribe(
         (res) => {
           this.modalService.dismissAll();
+          let bookLoan = {
+            bookLoansId: {
+              bookId: this.selectedBranch.bookCopiesId.bookId,
+              branchId: this.selectedBranch.bookCopiesId.branchId,
+              cardNo: this.cardNo,
+            },
+            book: this.selectedBook,
+            borrower: {
+              cardNo: this.cardNo,
+            },
+            branch: this.selectedBranch.branch,
+            dateOut: null,
+            dateIn: null,
+            dateDue: null,
+          };
+      
+          this.lmsService
+            .postObj("http://localhost:8083/lms/borrower/bookloan", bookLoan, {
+              headers: headers,
+            })
+            .subscribe(
+              (res) => {
+                this.modalService.dismissAll();
+              },
+              (err) => {
+                this.errMsg = "Create Loan Failed";
+                this.connection = false;
+              }
+            );
         },
         (err) => {
           this.errMsg = "Reserve Failed. Try Again.";
-          this.connection = false;
-        }
-      );
-    let bookLoan = {
-      bookLoansId: {
-        bookId: this.selectedBook.id,
-        branchId: this.selectedBranch.branch.id,
-        cardNo: this.cardNo,
-      },
-      book: this.selectedBook,
-      borrower: {
-        cardNo: this.cardNo,
-      },
-      branch: this.selectedBranch.branch,
-      dateOut: null,
-      dateIn: null,
-      dateDue: null,
-    };
-    this.lmsService
-      .postObj("http://localhost:8083/lms/borrower/bookloan", bookLoan, {
-        headers: headers,
-      })
-      .subscribe(
-        (res) => {
-          this.modalService.dismissAll();
-        },
-        (err) => {
-          console.log(err);
-          this.errMsg = err.error.message;
           this.connection = false;
         }
       );
