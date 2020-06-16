@@ -9,7 +9,7 @@ export class AuthsortPipe implements PipeTransform {
       return input.sort((a, b) => {
         let an1: string = a.authorName;
         let an2: string = b.authorName;
-        return an1 < an2 ? 1 : an1 > an2 ? -1 : 0;
+        return an1 < an2 ? -1 : an1 > an2 ? 1 : 0;
       });
     }
   }
