@@ -8,8 +8,7 @@ import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import {RouterTestingModule} from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { componentNeedsResolution } from '@angular/core/src/metadata/resource_loading';
+import { of, throwError } from 'rxjs';
 
 
 //Mock Modal Ref Class

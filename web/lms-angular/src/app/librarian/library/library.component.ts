@@ -36,11 +36,11 @@ export class LibraryComponent implements OnInit {
   nameInput: string;
   addressInput: string;
   selectedCopies: any;
-  noOfCopiesInput: Int16Array;
+  noOfCopiesInput: number;
   editName: boolean;
   editAddress: boolean;
   editNoOfCopies: boolean;
-  editRowIndex: Int16Array;
+  editRowIndex: number;
 
   addBookForm: boolean;
 
@@ -82,7 +82,8 @@ export class LibraryComponent implements OnInit {
           this.booksNotInLibrary = resp;
         },
         (err) =>{
-          this.errMsg = err.error.message;
+          this.connection=false;
+          this.errMsg = "Error in loading unlisted books.";
         }
       )
   }
@@ -142,6 +143,9 @@ export class LibraryComponent implements OnInit {
       .postObj(`http://localhost:8082/lms/librarian/bookcopies`, newCopies, {headers: headers})
       .subscribe((resp)=>{
         this.loadBookCopies();
+      },(err) => {
+        this.errMsg = "Error at adding Book Copy."
+        this.connection = false;
       });
     this.addBookForm = false;
 
@@ -170,13 +174,11 @@ export class LibraryComponent implements OnInit {
         this.closeEditRow();
   }
 
-  editRow(copy, index){
+  editRow(copy, index: number){
     this.selectedCopies = copy;
     this.editRowIndex = index;
     this.editNoOfCopies = true;
     this.noOfCopiesInput = copy.noOfCopies;
-    console.log(this.editRowIndex);
-    console.log(this.selectedCopies);
   }
   open(content) {
     this.modalRef = this.modalService.open(content);
