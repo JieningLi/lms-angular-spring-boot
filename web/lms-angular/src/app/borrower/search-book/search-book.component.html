@@ -38,7 +38,7 @@
             <ng-template #thenBlock>
               <span *ngFor="let bc of book.bookCopies; let j = index">
 
-                  <p *ngIf="book.bookCopies.length > 1 && j != book.bookCopies.length">{{bc.branch.name}} ({{bc.noOfCopies}}),</p>
+                  <p *ngIf="book.bookCopies.length > 1 && j != book.bookCopies.length-1">{{bc.branch.name}} ({{bc.noOfCopies}}),</p>
                   <p *ngIf="book.bookCopies.length > 1 && j == book.bookCopies.length-1">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
                   <p *ngIf="book.bookCopies.length == 1 ">{{bc.branch.name}} ({{bc.noOfCopies}})</p>
 

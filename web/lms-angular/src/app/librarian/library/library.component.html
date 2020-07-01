@@ -104,7 +104,7 @@
                 <td>#</td>
                 <td>
                   <form>
-                    <select [(ngModel)]="selectedBook" name="selectedBook">
+                    <select class="form-control input-sm" [(ngModel)]="selectedBook" name="selectedBook">
                       <ng-container *ngFor="let b of booksNotInLibrary" >
                         <option [ngValue]="b"> 
                           {{b.title}}
@@ -115,7 +115,7 @@
                 </td>
                 <td>
                   <form>
-                    <input [(ngModel)]="noOfCopiesInput" name="noOfCopiesInput" type="number"/>
+                    <input class="form-control input-sm"[(ngModel)]="noOfCopiesInput" name="noOfCopiesInput" type="number" min="0"/>
                   </form>
                 </td>
                 <td>

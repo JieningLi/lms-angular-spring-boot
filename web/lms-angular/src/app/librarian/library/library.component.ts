@@ -181,7 +181,7 @@ export class LibraryComponent implements OnInit {
     this.noOfCopiesInput = copy.noOfCopies;
   }
   open(content) {
-    this.modalRef = this.modalService.open(content);
+    this.modalRef = this.modalService.open(content, {windowClass: "myCustomModal"});
     this.modalRef.result.then(
       (result) => {
         this.errMsg = "";

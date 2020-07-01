@@ -10,8 +10,13 @@ h2{
   cursor: pointer;
 }
 .app-modal-window .modal-dialog {
-  width: 500px;
+  width: 1000px;
 }
+
+.myCustomModal .modal-dialog{
+  max-width: 1000px;
+}
+
 .bg {
     /* The image used */
     background: url("../../../assets/img/library-image.png") no-repeat center center fixed;
